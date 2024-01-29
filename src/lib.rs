@@ -1,4 +1,4 @@
-use std::ops::Index;
+use std::ops::{Index, IndexMut};
 
 #[derive(Debug)]
 pub struct Vec2D<T> {
@@ -18,11 +18,27 @@ impl<T: Default + Clone> Vec2D<T> {
     }
 
     pub fn from_slice(rows: usize, cols: usize, slice: &[T]) -> Self {
+        let expected_length = rows * cols;
+        assert_eq!(
+            expected_length,
+            slice.len(),
+            "Invalid slice length for Vec2D creation. Expected length: {}, Actual length: {}",
+            expected_length,
+            slice.len()
+        );
         Self {
             data: slice.into(),
             rows,
             cols,
         }
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = &[T]> {
+        self.data.chunks(self.cols)
+    }
+
+    pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut [T]> {
+        self.data.chunks_mut(self.cols)
     }
 }
 
@@ -36,10 +52,10 @@ impl<T> Index<usize> for Vec2D<T> {
     }
 }
 
-impl<T> Index<(usize, usize)> for Vec2D<T> {
-    type Output = T;
-
-    fn index(&self, (row, col): (usize, usize)) -> &Self::Output {
-        &self.data[row * self.cols + col]
+impl<T> IndexMut<usize> for Vec2D<T> {
+    fn index_mut(&mut self, row: usize) -> &mut Self::Output {
+        let start = row * self.cols;
+        let end = start + self.cols;
+        &mut self.data[start..end]
     }
 }
