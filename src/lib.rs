@@ -3,8 +3,8 @@ use std::ops::{Index, IndexMut};
 #[derive(Debug)]
 pub struct Vec2D<T> {
     data: Vec<T>,
-    rows: usize,
-    cols: usize,
+    _rows: usize,
+    _cols: usize,
 }
 
 impl<T: Default + Clone> Vec2D<T> {
@@ -12,8 +12,8 @@ impl<T: Default + Clone> Vec2D<T> {
         let size: usize = rows * cols;
         Self {
             data: vec![T::default(); size],
-            rows,
-            cols,
+            _rows: rows,
+            _cols: cols,
         }
     }
 
@@ -28,17 +28,17 @@ impl<T: Default + Clone> Vec2D<T> {
         );
         Self {
             data: slice.into(),
-            rows,
-            cols,
+            _rows: rows,
+            _cols: cols,
         }
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &[T]> {
-        self.data.chunks(self.cols)
+        self.data.chunks(self._cols)
     }
 
     pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut [T]> {
-        self.data.chunks_mut(self.cols)
+        self.data.chunks_mut(self._cols)
     }
 }
 
@@ -46,16 +46,16 @@ impl<T> Index<usize> for Vec2D<T> {
     type Output = [T];
 
     fn index(&self, row: usize) -> &Self::Output {
-        let start = row * self.cols;
-        let end = start + self.cols;
+        let start = row * self._cols;
+        let end = start + self._cols;
         &self.data[start..end]
     }
 }
 
 impl<T> IndexMut<usize> for Vec2D<T> {
     fn index_mut(&mut self, row: usize) -> &mut Self::Output {
-        let start = row * self.cols;
-        let end = start + self.cols;
+        let start = row * self._cols;
+        let end = start + self._cols;
         &mut self.data[start..end]
     }
 }
