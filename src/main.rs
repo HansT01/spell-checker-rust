@@ -1,3 +1,5 @@
+use std::{collections::BinaryHeap, fs::read_to_string, time::Instant};
+
 use spell_checker_rust::Vec2D;
 
 fn calculate_distance(s1: &str, s2: &str) -> usize {
@@ -26,8 +28,26 @@ fn calculate_distance(s1: &str, s2: &str) -> usize {
 }
 
 fn main() {
-    // let file_content = read_to_string("data/words.txt").expect("Unable to read words.txt");
-    // let words: Vec<&str> = file_content.lines().collect();
-    let distance = calculate_distance("appa", "aa");
-    println!("Distance: {distance}");
+    let file_content = read_to_string("data/words.txt").expect("Unable to read words.txt");
+    let words: Vec<&str> = file_content.lines().collect();
+
+    let word_to_check = "catalyt";
+    let k = 10;
+
+    let start_time = Instant::now();
+    let mut top_k_heap: BinaryHeap<(usize, &str)> = BinaryHeap::new();
+    for &word in words.iter() {
+        let distance = calculate_distance(word_to_check, word);
+        top_k_heap.push((distance, word));
+        if top_k_heap.len() > k {
+            top_k_heap.pop();
+        }
+    }
+    let elapsed_time = start_time.elapsed();
+
+    let mut matches: Vec<(usize, &str)> = top_k_heap.into();
+    matches.sort();
+
+    println!("Results: {matches:?}");
+    println!("Time elapsed: {elapsed_time:.2?}");
 }
