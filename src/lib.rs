@@ -1,23 +1,39 @@
-use std::ops::{Index, IndexMut};
+use std::{
+    alloc::{alloc, Layout},
+    ops::{Index, IndexMut},
+};
 
 #[derive(Debug)]
 pub struct Vec2D<T> {
-    data: Vec<T>,
+    data: Box<[T]>,
     _rows: usize,
     _cols: usize,
 }
 
-impl<T: Default + Clone> Vec2D<T> {
-    pub fn new(rows: usize, cols: usize) -> Self {
+impl<T> Vec2D<T> {
+    pub fn new(rows: usize, cols: usize) -> Self
+    where
+        T: Default,
+    {
         let size: usize = rows * cols;
+        let layout = Layout::array::<T>(size).unwrap();
+        let ptr = unsafe { alloc(layout) as *mut T };
+        for i in 0..size {
+            unsafe {
+                ptr.add(i).write(Default::default());
+            }
+        }
         Self {
-            data: vec![T::default(); size],
+            data: unsafe { Box::from_raw(std::slice::from_raw_parts_mut(ptr, size)) },
             _rows: rows,
             _cols: cols,
         }
     }
 
-    pub fn from_slice(rows: usize, cols: usize, slice: &[T]) -> Self {
+    pub fn from_slice(rows: usize, cols: usize, slice: &[T]) -> Self
+    where
+        T: Copy,
+    {
         let expected_length = rows * cols;
         assert_eq!(
             expected_length,
