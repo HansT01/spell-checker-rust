@@ -4,13 +4,13 @@ use std::{
 };
 
 #[derive(Debug)]
-pub struct Vec2D<T> {
+pub struct Array2D<T> {
     data: Box<[T]>,
     _rows: usize,
     _cols: usize,
 }
 
-impl<T> Vec2D<T> {
+impl<T> Array2D<T> {
     pub fn new(rows: usize, cols: usize) -> Self
     where
         T: Default,
@@ -58,7 +58,7 @@ impl<T> Vec2D<T> {
     }
 }
 
-impl<T> Index<usize> for Vec2D<T> {
+impl<T> Index<usize> for Array2D<T> {
     type Output = [T];
 
     fn index(&self, row: usize) -> &Self::Output {
@@ -68,7 +68,7 @@ impl<T> Index<usize> for Vec2D<T> {
     }
 }
 
-impl<T> IndexMut<usize> for Vec2D<T> {
+impl<T> IndexMut<usize> for Array2D<T> {
     fn index_mut(&mut self, row: usize) -> &mut Self::Output {
         let start = row * self._cols;
         let end = start + self._cols;

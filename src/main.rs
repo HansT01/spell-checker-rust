@@ -1,11 +1,11 @@
 use std::{collections::BinaryHeap, fs::read_to_string, time::Instant};
 
-use spell_checker_rust::Vec2D;
+use spell_checker_rust::Array2D;
 
 fn calculate_distance(s1: &str, s2: &str) -> usize {
     let rows = s1.len() + 1;
     let cols = s2.len() + 1;
-    let mut matrix: Vec2D<usize> = Vec2D::new(rows, cols);
+    let mut matrix: Array2D<usize> = Array2D::new(rows, cols);
     for i in 0..rows {
         matrix[i][0] = i
     }
