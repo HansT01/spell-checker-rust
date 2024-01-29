@@ -3,6 +3,9 @@ use std::{collections::BinaryHeap, fs::read_to_string, time::Instant};
 use spell_checker_rust::Array2D;
 
 fn calculate_distance(s1: &str, s2: &str) -> usize {
+    if s1.len().abs_diff(s2.len()) > 2 {
+        return usize::MAX;
+    }
     let rows = s1.len() + 1;
     let cols = s2.len() + 1;
     let mut matrix: Array2D<usize> = Array2D::new(rows, cols);
