@@ -38,7 +38,7 @@ impl<T> Array2D<T> {
         assert_eq!(
             expected_length,
             slice.len(),
-            "Invalid slice length for Vec2D creation. Expected length: {}, Actual length: {}",
+            "Invalid slice length for Array2D creation. Expected length: {}, Actual length: {}",
             expected_length,
             slice.len()
         );
