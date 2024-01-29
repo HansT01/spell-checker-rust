@@ -8,4 +8,7 @@ fn main() {
 
     let test_v2d = Vec2D::from_slice(2, 2, &[1, 2, 3, 4]);
     println!("{test_v2d:?}");
+    for item in test_v2d[1].iter() {
+        println!("{}", item);
+    }
 }

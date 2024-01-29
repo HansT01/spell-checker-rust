@@ -1,3 +1,5 @@
+use std::ops::Index;
+
 #[derive(Debug)]
 pub struct Vec2D<T> {
     data: Vec<T>,
@@ -21,5 +23,23 @@ impl<T: Default + Clone> Vec2D<T> {
             rows,
             cols,
         }
+    }
+}
+
+impl<T> Index<usize> for Vec2D<T> {
+    type Output = [T];
+
+    fn index(&self, row: usize) -> &Self::Output {
+        let start = row * self.cols;
+        let end = start + self.cols;
+        &self.data[start..end]
+    }
+}
+
+impl<T> Index<(usize, usize)> for Vec2D<T> {
+    type Output = T;
+
+    fn index(&self, (row, col): (usize, usize)) -> &Self::Output {
+        &self.data[row * self.cols + col]
     }
 }
