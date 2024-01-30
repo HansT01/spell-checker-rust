@@ -1,7 +1,6 @@
 use std::{
     collections::{BinaryHeap, HashMap},
     fs::read_to_string,
-    str::FromStr,
     time::Instant,
 };
 
