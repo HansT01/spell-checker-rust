@@ -7,24 +7,31 @@ use std::{
 use spell_checker_rust::Array2D;
 
 const LEN_DIFF_LIMIT: usize = 2;
+const BASE_COST: usize = 2;
 
 fn calculate_distance(s1: &str, s2: &str) -> usize {
     let rows = s1.len() + 1;
     let cols = s2.len() + 1;
     let mut matrix: Array2D<usize> = Array2D::new(rows, cols);
     for i in 0..rows {
-        matrix[i][0] = i
+        matrix[i][0] = i * BASE_COST
     }
     for i in 0..cols {
-        matrix[0][i] = i
+        matrix[0][i] = i * BASE_COST
     }
     let c1: Vec<char> = s1.chars().collect();
     let c2: Vec<char> = s2.chars().collect();
     for i in 1..rows {
         for j in 1..cols {
-            let cost = if c1[i - 1] == c2[j - 1] { 0 } else { 1 };
-            let insertion = matrix[i][j - 1] + 1;
-            let deletion = matrix[i - 1][j] + 1;
+            let mut cost = 0;
+            if !c1[i - 1].eq(&c2[j - 1]) {
+                cost += 1
+            };
+            if !c1[i - 1].eq_ignore_ascii_case(&c2[j - 1]) {
+                cost += 1;
+            }
+            let insertion = matrix[i][j - 1] + BASE_COST;
+            let deletion = matrix[i - 1][j] + BASE_COST;
             let substitution = matrix[i - 1][j - 1] + cost;
             let distance = insertion.min(deletion).min(substitution);
             matrix[i][j] = distance;
@@ -65,8 +72,8 @@ fn get_word_map() -> HashMap<usize, Vec<String>> {
 }
 
 fn main() {
-    let word_to_check = "catalyt";
-    let k = 20;
+    let word_to_check = "jason";
+    let k = 5;
 
     let word_map = get_word_map();
 
